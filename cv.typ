@@ -69,12 +69,12 @@ En busca de mi primera experiencia laboral para aportar valor en proyectos reale
     Linux o un entorno embebido como una Raspberry Pi Zero con un minidisplay.
   ]
   #punto[
-    Implementé los diferentes subsistemas (CPU, procesado de píxeles, audio, timers e interrupciones), 
-    garantizando su correcta interoperabilidad y sincronización.
+    Implementé los diferentes subsistemas (CPU, procesado de píxeles, audio, timers e interrupciones), garantizando
+    su correcta interoperabilidad y sincronización.
   ]
   #punto[
-    En desarrollo: empaquetado del sistema como una imagen de Linux embebida, declarativa,
-    inmutable y reproducible (NixOS), preconfigurada para un dispositivo dedicado plug-and-play.
+    Creé una imagen de Linux declarativa y reproducible con NixOS para conseguir un sistema inmutable y preconfigurado
+    que con el objetivo de ofrecer una experiencia de usuario plug-and-play.
   ]
   #punto[
     Validé el emulador de forma automatizada contra decenas de tests propios y de la comunidad,
