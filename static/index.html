@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CV — Daniel Queijo Seoane</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      object {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <object id="pdf-object" type="application/pdf" data="cv-en.pdf">
+      <p id="pdf-fallback-message">
+        Your browser cannot display the PDF. Open or download it here
+        <a id="pdf-fallback" href="cv-en.pdf">Open or download it here</a>.
+      </p>
+    </object>
+    <script>
+      // supported languages and their fallback messages
+      const defaultLanguage = {
+        code: "en",
+        fallbackMessage:
+          "Your browser cannot display the PDF. Open or download it here",
+        fallbackLinkText: "Open or download it here",
+      };
+      const supportedLanguages = [
+        defaultLanguage,
+        {
+          code: "es",
+          fallbackMessage:
+            "Tu navegador no puede mostrar el PDF. Ábrelo o descárgalo aquí",
+          fallbackLinkText: "Ábrelo o descárgalo aquí",
+        },
+        {
+          code: "gl",
+          fallbackMessage:
+            "O teu navegador non pode amosar o PDF. Ábreo ou descárgao aquí",
+          fallbackLinkText: "Ábreo ou descárgao aquí",
+        },
+      ];
+
+      // get client wanted language
+      const requested = (navigator.language || defaultLanguage.code)
+        .slice(0, 2)
+        .toLowerCase();
+      const language =
+        supportedLanguages.find((lang) => lang.code === requested) ||
+        defaultLanguage;
+      const file = `cv-${language.code}.pdf`;
+
+      // set the language and pdf file in the html
+      document.documentElement.lang = language.code;
+      document.getElementById("pdf-object").data = file;
+      document.getElementById("pdf-fallback").href = file;
+      document.getElementById("pdf-fallback-message").textContent =
+        language.fallbackMessage;
+      document.getElementById("pdf-fallback").textContent =
+        language.fallbackLinkText;
+    </script>
+  </body>
+</html>

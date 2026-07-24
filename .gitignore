@@ -1,5 +1,4 @@
 .direnv
 *.pdf
 result
-*.html
-
+build
