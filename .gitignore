@@ -1,3 +1,5 @@
 .direnv
 *.pdf
 result
+*.html
+
