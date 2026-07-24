@@ -21,6 +21,7 @@
             buildInputs = [
               typst
               typstyle
+              just
             ];
           };
         }
@@ -33,8 +34,11 @@
             name = "cv";
             src = ./.;
             nativeBuildInputs = [typst];
-            buildPhase = "typst compile cv.typ cv.pdf";
-            installPhase = "mkdir -p $out && cp cv.pdf $out/";
+            buildPhase =
+              lib.concatMapStringsSep "\n"
+              (lang: "typst compile --input lang=${lang} src/cv.typ build/cv-${lang}.pdf")
+              ["en" "gl" "es"];
+            installPhase = "mkdir -p $out && cp build/*.pdf $out/";
           };
         }
     );

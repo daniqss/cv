@@ -31,27 +31,8 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p public
-          cp -L result/cv.pdf public/cv.pdf
-          cat > public/index.html <<'EOF'
-          <!doctype html>
-          <html lang="es">
-            <head>
-              <meta charset="utf-8" />
-              <meta name="viewport" content="width=device-width, initial-scale=1" />
-              <title>CV — Daniel Queijo Seoane</title>
-              <style>
-                html, body { margin: 0; height: 100%; }
-                object { display: block; width: 100%; height: 100%; border: 0; }
-              </style>
-            </head>
-            <body>
-              <object data="cv.pdf" type="application/pdf">
-                <p>Tu navegador no puede mostrar el PDF.
-                  <a href="cv.pdf">Ábrelo o descárgalo aquí</a>.</p>
-              </object>
-            </body>
-          </html>
-          EOF
+          cp -L result/* public/
+          cp -L static/index.html public/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
