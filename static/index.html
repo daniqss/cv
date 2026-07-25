@@ -16,36 +16,46 @@
         height: 100%;
         border: 0;
       }
+      #pdf-fallback-message {
+        display: none;
+        font-family: system-ui, sans-serif;
+        padding: 2rem;
+        line-height: 1.6;
+      }
+      body.no-pdf-viewer object {
+        display: none;
+      }
+      body.no-pdf-viewer #pdf-fallback-message {
+        display: block;
+      }
     </style>
   </head>
   <body>
-    <object id="pdf-object" type="application/pdf" data="cv-en.pdf">
-      <p id="pdf-fallback-message">
-        Your browser cannot display the PDF. Open or download it here
-        <a id="pdf-fallback" href="cv-en.pdf">Open or download it here</a>.
-      </p>
-    </object>
+    <object id="pdf-object" type="application/pdf" data="cv-en.pdf"></object>
+
+    <p id="pdf-fallback-message">
+      <span id="pdf-fallback-text"></span>
+      <a id="pdf-fallback" href="cv-en.pdf"></a>
+    </p>
+
     <script>
       // supported languages and their fallback messages
       const defaultLanguage = {
         code: "en",
-        fallbackMessage:
-          "Your browser cannot display the PDF. Open or download it here",
-        fallbackLinkText: "Open or download it here",
+        fallbackMessage: "Your browser cannot embed PDF.",
+        fallbackLinkText: "Open it here",
       };
       const supportedLanguages = [
         defaultLanguage,
         {
           code: "es",
-          fallbackMessage:
-            "Tu navegador no puede mostrar el PDF. Ábrelo o descárgalo aquí",
-          fallbackLinkText: "Ábrelo o descárgalo aquí",
+          fallbackMessage: "Tu navegador no puede embeber el PDF.",
+          fallbackLinkText: "Ábrelo aquí",
         },
         {
           code: "gl",
-          fallbackMessage:
-            "O teu navegador non pode amosar o PDF. Ábreo ou descárgao aquí",
-          fallbackLinkText: "Ábreo ou descárgao aquí",
+          fallbackMessage: "O teu navegador non pode embeber o PDF.",
+          fallbackLinkText: "Ábreo aquí",
         },
       ];
 
@@ -58,14 +68,31 @@
         defaultLanguage;
       const file = `cv-${language.code}.pdf`;
 
+      // mobile browsers have no inline pdf viewer and don't trigger the
+      // <object> fallback either, so we have to ask instead of waiting
+      const canEmbedPdf = () => {
+        if (typeof navigator.pdfViewerEnabled === "boolean")
+          return navigator.pdfViewerEnabled;
+        // ipados reports itself as macintosh
+        const touchMac =
+          /Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1;
+        return (
+          !/Android|iPhone|iPod|iPad/i.test(navigator.userAgent) && !touchMac
+        );
+      };
+
       // set the language and pdf file in the html
       document.documentElement.lang = language.code;
       document.getElementById("pdf-object").data = file;
-      document.getElementById("pdf-fallback").href = file;
-      document.getElementById("pdf-fallback-message").textContent =
+      document.getElementById("pdf-fallback-text").textContent =
         language.fallbackMessage;
-      document.getElementById("pdf-fallback").textContent =
-        language.fallbackLinkText;
+
+      const link = document.getElementById("pdf-fallback");
+      link.href = file;
+      link.textContent = language.fallbackLinkText;
+
+      // no inline viewer, show the link instead of an empty box
+      if (!canEmbedPdf()) document.body.classList.add("no-pdf-viewer");
     </script>
   </body>
 </html>

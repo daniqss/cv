@@ -28,17 +28,24 @@
     );
 
     packages = eachSystem (
-      system: pkgs:
+      system: pkgs: let
+        languages = ["en" "gl" "es"];
+      in
         with pkgs; {
           default = stdenvNoCC.mkDerivation {
             name = "cv";
             src = ./.;
             nativeBuildInputs = [typst];
-            buildPhase =
-              lib.concatMapStringsSep "\n"
-              (lang: "typst compile --input lang=${lang} src/cv.typ build/cv-${lang}.pdf")
-              ["en" "gl" "es"];
-            installPhase = "mkdir -p $out && cp build/*.pdf $out/";
+            buildPhase = ''
+              ${
+                lib.concatMapStringsSep "\n"
+                (lang: "typst compile --input lang=${lang} src/cv.typ build/cv-${lang}.pdf")
+                languages
+              }
+              cp static/index.html build/index.html
+            '';
+
+            installPhase = "mkdir -p $out && cp build/* $out/";
           };
         }
     );
