@@ -4,58 +4,56 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CV — Daniel Queijo Seoane</title>
+    <link rel="stylesheet" href="cv.css" />
     <style>
-      html,
-      body {
-        margin: 0;
-        height: 100%;
+      #pdf-download {
+        position: fixed;
+        top: 12pt;
+        right: 12pt;
+        font-family: system-ui, sans-serif;
+        font-size: 9pt;
+        color: #ffffff;
+        text-decoration: none;
+        border: 1px solid #b3261e;
+        border-radius: 4px;
+        padding: 4pt 8pt;
+        background: #c62828;
       }
-      object {
-        display: block;
-        width: 100%;
-        height: 100%;
-        border: 0;
+      #pdf-download:hover {
+        background: #b3261e;
+        border-color: #8e1b16;
       }
-      #pdf-fallback-message {
+      #cv-error {
         display: none;
         font-family: system-ui, sans-serif;
         padding: 2rem;
         line-height: 1.6;
       }
-      body.no-pdf-viewer object {
-        display: none;
-      }
-      body.no-pdf-viewer #pdf-fallback-message {
-        display: block;
-      }
     </style>
   </head>
   <body>
-    <object id="pdf-object" type="application/pdf" data="cv-en.pdf"></object>
-
-    <p id="pdf-fallback-message">
-      <span id="pdf-fallback-text"></span>
-      <a id="pdf-fallback" href="cv-en.pdf"></a>
-    </p>
+    <a id="pdf-download" href="cv-en.pdf" download>Download PDF</a>
+    <div id="cv-root"></div>
+    <p id="cv-error"></p>
 
     <script>
-      // supported languages and their fallback messages
+      // supported languages and their error fallback messages
       const defaultLanguage = {
         code: "en",
-        fallbackMessage: "Your browser cannot embed PDF.",
-        fallbackLinkText: "Open it here",
+        errorMessage: "Could not load the CV. ",
+        errorLinkText: "Open the PDF instead.",
       };
       const supportedLanguages = [
         defaultLanguage,
         {
           code: "es",
-          fallbackMessage: "Tu navegador no puede embeber el PDF.",
-          fallbackLinkText: "Ábrelo aquí",
+          errorMessage: "No se ha podido cargar el CV. ",
+          errorLinkText: "Abre el PDF en su lugar.",
         },
         {
           code: "gl",
-          fallbackMessage: "O teu navegador non pode embeber o PDF.",
-          fallbackLinkText: "Ábreo aquí",
+          errorMessage: "Non se puido cargar o CV. ",
+          errorLinkText: "Abre o PDF no seu lugar.",
         },
       ];
 
@@ -66,33 +64,34 @@
       const language =
         supportedLanguages.find((lang) => lang.code === requested) ||
         defaultLanguage;
-      const file = `cv-${language.code}.pdf`;
 
-      // mobile browsers have no inline pdf viewer and don't trigger the
-      // <object> fallback either, so we have to ask instead of waiting
-      const canEmbedPdf = () => {
-        if (typeof navigator.pdfViewerEnabled === "boolean")
-          return navigator.pdfViewerEnabled;
-        // ipados reports itself as macintosh
-        const touchMac =
-          /Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1;
-        return (
-          !/Android|iPhone|iPod|iPad/i.test(navigator.userAgent) && !touchMac
-        );
-      };
-
-      // set the language and pdf file in the html
       document.documentElement.lang = language.code;
-      document.getElementById("pdf-object").data = file;
-      document.getElementById("pdf-fallback-text").textContent =
-        language.fallbackMessage;
+      document.getElementById("pdf-download").href = `cv-${language.code}.pdf`;
 
-      const link = document.getElementById("pdf-fallback");
-      link.href = file;
-      link.textContent = language.fallbackLinkText;
-
-      // no inline viewer, show the link instead of an empty box
-      if (!canEmbedPdf()) document.body.classList.add("no-pdf-viewer");
+      // fetch the pre-rendered per-language cv and inject its markup in place,
+      // so the page keeps a single shareable url instead of redirecting
+      fetch(`cv-${language.code}.html`)
+        .then((response) => {
+          if (!response.ok) throw new Error(response.statusText);
+          return response.text();
+        })
+        .then((html) => {
+          const parsed = new DOMParser().parseFromString(html, "text/html");
+          const content = parsed.getElementById("cv");
+          if (!content) throw new Error("missing #cv content");
+          document.getElementById("cv-root").replaceWith(content);
+        })
+        .catch(() => {
+          document.getElementById("cv-root").remove();
+          const error = document.getElementById("cv-error");
+          const file = `cv-${language.code}.pdf`;
+          error.textContent = language.errorMessage;
+          const link = document.createElement("a");
+          link.href = file;
+          link.textContent = language.errorLinkText;
+          error.appendChild(link);
+          error.style.display = "block";
+        });
     </script>
   </body>
 </html>

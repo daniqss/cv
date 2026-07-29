@@ -11,9 +11,16 @@ just compile
 just compile gl
 just compile es
 
+just compile-html
+just compile-html gl
+just compile-html es
+
 just clean
 ```
 
 ## deploy
 It gets deployed to GitHub Pages using a GitHub Actions workflow (`.github/workflows/deploy.yml`).
-`nix build .` builds the three pdfs. [This `index.html`](static/index.html) detects the browser language and loads the corresponding pdf.
+`nix build .` builds, per language, a PDF (`cv-<lang>.pdf`) and an HTML export of the CV
+(`cv-<lang>.html`, via Typst's `--features html`, styled by [`static/cv.css`](static/cv.css)).
+[`index.html`](static/index.html) detects the browser language, fetches the matching
+`cv-<lang>.html` and injects it into the page, with a "Download PDF" link to the matching PDF.

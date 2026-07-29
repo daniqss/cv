@@ -1,0 +1,138 @@
+/* Replicates the look of the PDF (src/template.typ) for the HTML export. */
+
+:root {
+  --accent: #1a1a1a;
+  --muted: #555555;
+  --bg: #f2f2f2;
+  --paper: var(--bg); /* the cv sheet blends into the page background */
+}
+
+body {
+  background: var(--bg);
+  margin: 0;
+}
+
+.cv {
+  box-sizing: border-box;
+  max-width: 500pt; /* a4 width minus the pdf's 1.7cm side margins */
+  margin: 24pt auto;
+  padding: 40pt 36pt;
+  background: var(--paper);
+  color: var(--accent);
+  font-family: "Libertinus Serif", "Linux Libertine O", Georgia, "Times New Roman", serif;
+  font-size: 11.5pt;
+  line-height: 1.5;
+}
+
+.cv a {
+  color: inherit;
+}
+
+.cv-header {
+  margin-bottom: 4pt;
+}
+
+.cv-name {
+  font-size: 19pt;
+  font-weight: 700;
+  margin: 0 0 2pt;
+}
+
+.cv-contact {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+}
+
+.cv-contact li:not(:first-child)::before {
+  content: "•";
+  margin: 0 0.5em;
+}
+
+.cv-profile {
+  margin: 4pt 0 0;
+  text-align: justify;
+}
+
+.cv-section {
+  margin-top: 6pt;
+}
+
+.section-title {
+  font-size: 11.5pt;
+  font-weight: 700;
+  letter-spacing: 0.5pt;
+  border-bottom: 0.6pt solid var(--accent);
+  margin: 0 0 4pt;
+  padding-bottom: 2pt;
+}
+
+.entry {
+  margin-bottom: 5pt;
+}
+
+.entry-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6em;
+  margin-bottom: 2pt;
+}
+
+.entry-title-line {
+  display: flex;
+  align-items: baseline;
+  gap: 4pt;
+}
+
+.entry-title {
+  font-weight: 700;
+}
+
+.icon-link {
+  line-height: 1;
+}
+
+.icon-link img {
+  height: 0.85em;
+  width: auto;
+  vertical-align: -0.05em;
+}
+
+.entry-date {
+  color: var(--muted);
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.entry-body p {
+  margin: 0 0 3pt;
+  text-align: justify;
+}
+
+.entry-body ul {
+  list-style: disc;
+  margin: 0 0 2pt;
+  padding-left: 1.1em;
+}
+
+.entry-body ul li::marker {
+  color: var(--muted);
+}
+
+@media (max-width: 560pt) {
+  .cv {
+    margin: 0;
+    padding: 24pt 18pt;
+    max-width: none;
+  }
+
+  .entry-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1pt;
+  }
+}

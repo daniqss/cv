@@ -68,3 +68,53 @@
     }
   }
 }
+
+// html export ignores layout primitives (page, v, h, line, grid) and even
+// text() styling (size, weight, fill), so the html rendering is built as
+// semantic markup with css classes instead, styled entirely by cv.css.
+#let entry_html(title: none, date: none, github: none, deploy: none, body) = html.elem("article", attrs: (class: "entry"), {
+  if title != none or date != none {
+    html.elem("div", attrs: (class: "entry-head"), {
+      html.elem("div", attrs: (class: "entry-title-line"), {
+        html.elem("span", attrs: (class: "entry-title"))[#title]
+        if deploy != none {
+          html.elem("a", attrs: (class: "icon-link", href: deploy, title: "Deploy"))[#image("assets/globe.svg", height: 11pt)]
+        }
+        if github != none {
+          html.elem("a", attrs: (class: "icon-link", href: github, title: "GitHub"))[#image("assets/github.svg", height: 11pt)]
+        }
+      })
+      html.elem("span", attrs: (class: "entry-date"))[#date]
+    })
+  }
+  html.elem("div", attrs: (class: "entry-body"), body)
+})
+
+#let cv_html(cv_data) = {
+  set document(title: cv_data.meta.title, author: cv_data.header.name)
+
+  html.elem("div", attrs: (id: "cv", class: "cv"), {
+    html.elem("link", attrs: (rel: "stylesheet", href: "cv.css"))
+
+    html.elem("header", attrs: (class: "cv-header"), {
+      html.elem("h1", attrs: (class: "cv-name"))[#cv_data.header.name]
+      html.elem("ul", attrs: (class: "cv-contact"), {
+        html.elem("li")[#cv_data.header.location]
+        html.elem("li", link("https://github.com/daniqss")[#cv_data.header.github])
+        html.elem("li")[#cv_data.header.phone]
+        html.elem("li", link("mailto:" + cv_data.header.email)[#cv_data.header.email])
+      })
+    })
+
+    html.elem("p", attrs: (class: "cv-profile"), cv_data.profile)
+
+    for s in cv_data.sections {
+      html.elem("section", attrs: (class: "cv-section"), {
+        html.elem("h2", attrs: (class: "section-title"))[#upper(s.title)]
+        for e in s.entries {
+          entry_html(title: e.title, date: e.date, github: e.at("github", default: none), deploy: e.at("deploy", default: none), e.body)
+        }
+      })
+    }
+  })
+}
