@@ -69,9 +69,8 @@
   }
 }
 
-// html export ignores layout primitives (page, v, h, line, grid) and even
-// text() styling (size, weight, fill), so the html rendering is built as
-// semantic markup with css classes instead, styled entirely by cv.css.
+// by now, the html feature dont follow the layout of normal typst syntax,
+// so we have to build the html structure manually and then style it
 #let entry_html(title: none, date: none, github: none, deploy: none, body) = html.elem("article", attrs: (class: "entry"), {
   if title != none or date != none {
     html.elem("div", attrs: (class: "entry-head"), {
@@ -94,7 +93,7 @@
   set document(title: cv_data.meta.title, author: cv_data.header.name)
 
   html.elem("div", attrs: (id: "cv", class: "cv"), {
-    html.elem("link", attrs: (rel: "stylesheet", href: "cv.css"))
+    html.elem("link", attrs: (rel: "stylesheet", href: "styles.css"))
 
     html.elem("header", attrs: (class: "cv-header"), {
       html.elem("h1", attrs: (class: "cv-name"))[#cv_data.header.name]

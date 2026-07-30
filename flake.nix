@@ -28,28 +28,37 @@
     );
 
     packages = eachSystem (
-      system: pkgs: let
-        languages = ["en" "gl" "es"];
-      in
-        with pkgs; {
+      system: pkgs:
+        with pkgs;
+        with pkgs.lib; {
           default = stdenvNoCC.mkDerivation {
             name = "cv";
             src = ./.;
             nativeBuildInputs = [typst];
-            buildPhase = ''
+            buildPhase = let
+              combinations = cartesianProduct {
+                format = [
+                  {
+                    extension = "pdf";
+                    flags = "";
+                  }
+                  {
+                    extension = "html";
+                    flags = "--features html --input format=html";
+                  }
+                ];
+                lang = ["en" "gl" "es"];
+              };
+
+              commands = map ({
+                format,
+                lang,
+              }: "typst compile ${format.flags} --input lang=${lang} src/cv.typ build/cv-${lang}.${format.extension}")
+              combinations;
+            in ''
               mkdir -p build
-              ${
-                lib.concatMapStringsSep "\n"
-                (lang: "typst compile --input lang=${lang} src/cv.typ build/cv-${lang}.pdf")
-                languages
-              }
-              ${
-                lib.concatMapStringsSep "\n"
-                (lang: "typst compile --features html --input lang=${lang} --input format=html -f html src/cv.typ build/cv-${lang}.html")
-                languages
-              }
-              cp static/index.html build/index.html
-              cp static/cv.css build/cv.css
+              ${concatStringsSep "\n" commands}
+              cp static/* build/
             '';
 
             installPhase = "mkdir -p $out && cp build/* $out/";

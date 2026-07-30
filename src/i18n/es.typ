@@ -110,7 +110,7 @@
           body: [
             #bullet[Administración avanzada de Linux y NixOS; contribuidor Open Source al ecosistema de Nix.]
             #bullet[Cómodo con varios stacks: C embebido / bare metal, Rust, Python, uso de Docker y desarrollo web (HTML, CSS, JavaScript/TypeScript y React).]
-            #bullet[Idiomas: bilingüe de gallego y español; inglés con nivel B2.]
+            #bullet[Idiomas: bilingüe gallego y español; inglés con nivel B2.]
           ],
         ),
       ),

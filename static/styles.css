@@ -123,6 +123,32 @@ body {
   color: var(--muted);
 }
 
+#pdf-download {
+  position: fixed;
+  top: 12pt;
+  right: 12pt;
+  font-family: system-ui, sans-serif;
+  font-size: 9pt;
+  color: #ffffff;
+  text-decoration: none;
+  border: 1px solid #b3261e;
+  border-radius: 4px;
+  padding: 4pt 8pt;
+  background: #c62828;
+}
+
+#pdf-download:hover {
+  background: #b3261e;
+  border-color: #8e1b16;
+}
+
+#cv-error {
+  display: none;
+  font-family: system-ui, sans-serif;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
 @media (max-width: 560pt) {
   .cv {
     margin: 0;
