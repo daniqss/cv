@@ -7,9 +7,27 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <a id="pdf-download" href="cv-en.pdf" download>Download PDF</a>
-    <div id="cv-root"></div>
-    <p id="cv-error"></p>
+    <a id="pdf-download" href="cv-en.pdf" download aria-label="Download PDF">
+      <svg
+        class="download-icon"
+        viewBox="0 0 24 24"
+        width="24"
+        height="24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 3v12" />
+        <path d="M7 11l5 5 5-5" />
+        <path d="M4 20h16" />
+      </svg>
+      <span class="download-label">Download PDF</span>
+    </a>
+    <main id="cv-root"></main>
+    <p id="cv-error" role="alert"></p>
 
     <script src="main.js"></script>
   </body>

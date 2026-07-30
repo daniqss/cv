@@ -19,9 +19,12 @@
         with pkgs; {
           default = mkShell {
             buildInputs = [
+              just
+
               typst
               typstyle
-              just
+
+              python3
             ];
           };
         }

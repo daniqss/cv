@@ -18,37 +18,49 @@ const supportedLanguages = [
   },
 ];
 
-// get client wanted language
-const requested = (navigator.language || defaultLanguage.code)
-  .slice(0, 2)
-  .toLowerCase();
-const language =
-  supportedLanguages.find((lang) => lang.code === requested) || defaultLanguage;
+function detectLanguage() {
+  const requested = (navigator.language || defaultLanguage.code)
+    .slice(0, 2)
+    .toLowerCase();
+  return (
+    supportedLanguages.find((lang) => lang.code === requested) ||
+    defaultLanguage
+  );
+}
 
-document.documentElement.lang = language.code;
-document.getElementById("pdf-download").href = `cv-${language.code}.pdf`;
+function showCvError(language) {
+  document.getElementById("cv-root").remove();
 
-// fetch the pre-rendered per-language cv and inject its markup in place,
-// so the page keeps a single shareable url instead of redirecting
-fetch(`cv-${language.code}.html`)
-  .then((response) => {
-    if (!response.ok) throw new Error(response.statusText);
-    return response.text();
-  })
-  .then((html) => {
-    const parsed = new DOMParser().parseFromString(html, "text/html");
-    const content = parsed.getElementById("cv");
-    if (!content) throw new Error("missing #cv content");
-    document.getElementById("cv-root").replaceWith(content);
-  })
-  .catch(() => {
-    document.getElementById("cv-root").remove();
-    const error = document.getElementById("cv-error");
-    const file = `cv-${language.code}.pdf`;
-    error.textContent = language.errorMessage;
-    const link = document.createElement("a");
-    link.href = file;
-    link.textContent = language.errorLinkText;
-    error.appendChild(link);
-    error.style.display = "block";
-  });
+  const error = document.getElementById("cv-error");
+  error.textContent = language.errorMessage;
+
+  const link = document.createElement("a");
+  link.href = `cv-${language.code}.pdf`;
+  link.textContent = language.errorLinkText;
+
+  error.appendChild(link);
+  error.style.display = "block";
+}
+
+function extractCvContent(html) {
+  const parsed = new DOMParser().parseFromString(html, "text/html");
+  const content = parsed.getElementById("cv");
+  if (!content) throw new Error("missing #cv content");
+  return content;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const language = detectLanguage();
+
+  document.documentElement.lang = language.code;
+  document.getElementById("pdf-download").href = `cv-${language.code}.pdf`;
+
+  fetch(`cv-${language.code}.html`)
+    .then((response) => {
+      if (!response.ok) throw new Error(response.statusText);
+      return response.text();
+    })
+    .then(extractCvContent)
+    .then((content) => document.getElementById("cv-root").replaceWith(content))
+    .catch(() => showCvError(language));
+});

@@ -73,8 +73,8 @@
 // so we have to build the html structure manually and then style it
 #let entry_html(title: none, date: none, github: none, deploy: none, body) = html.elem("article", attrs: (class: "entry"), {
   if title != none or date != none {
-    html.elem("div", attrs: (class: "entry-head"), {
-      html.elem("div", attrs: (class: "entry-title-line"), {
+    html.elem("header", attrs: (class: "entry-head"), {
+      html.elem("h3", attrs: (class: "entry-title-line"), {
         html.elem("span", attrs: (class: "entry-title"))[#title]
         if deploy != none {
           html.elem("a", attrs: (class: "icon-link", href: deploy, title: "Deploy"))[#image("assets/globe.svg", height: 11pt)]
@@ -92,9 +92,9 @@
 #let cv_html(cv_data) = {
   set document(title: cv_data.meta.title, author: cv_data.header.name)
 
-  html.elem("div", attrs: (id: "cv", class: "cv"), {
-    html.elem("link", attrs: (rel: "stylesheet", href: "styles.css"))
+  html.elem("link", attrs: (rel: "stylesheet", href: "styles.css"))
 
+  html.elem("main", attrs: (id: "cv", class: "cv"), {
     html.elem("header", attrs: (class: "cv-header"), {
       html.elem("h1", attrs: (class: "cv-name"))[#cv_data.header.name]
       html.elem("ul", attrs: (class: "cv-contact"), {
