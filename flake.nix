@@ -1,5 +1,5 @@
 {
-  description = "cv as code";
+  description = "cv as code, using typst";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
