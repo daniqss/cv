@@ -1,5 +1,5 @@
 {
-  description = "cv as code";
+  description = "cv as code, using typst";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -19,30 +19,49 @@
         with pkgs; {
           default = mkShell {
             buildInputs = [
+              just
+
               typst
               typstyle
-              just
+
+              python3
             ];
           };
         }
     );
 
     packages = eachSystem (
-      system: pkgs: let
-        languages = ["en" "gl" "es"];
-      in
-        with pkgs; {
+      system: pkgs:
+        with pkgs;
+        with pkgs.lib; {
           default = stdenvNoCC.mkDerivation {
             name = "cv";
             src = ./.;
             nativeBuildInputs = [typst];
-            buildPhase = ''
-              ${
-                lib.concatMapStringsSep "\n"
-                (lang: "typst compile --input lang=${lang} src/cv.typ build/cv-${lang}.pdf")
-                languages
-              }
-              cp static/index.html build/index.html
+            buildPhase = let
+              combinations = cartesianProduct {
+                format = [
+                  {
+                    extension = "pdf";
+                    flags = "";
+                  }
+                  {
+                    extension = "html";
+                    flags = "--features html --input format=html";
+                  }
+                ];
+                lang = ["en" "gl" "es"];
+              };
+
+              commands = map ({
+                format,
+                lang,
+              }: "typst compile ${format.flags} --input lang=${lang} src/cv.typ build/cv-${lang}.${format.extension}")
+              combinations;
+            in ''
+              mkdir -p build
+              ${concatStringsSep "\n" commands}
+              cp static/* build/
             '';
 
             installPhase = "mkdir -p $out && cp build/* $out/";

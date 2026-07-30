@@ -1,0 +1,237 @@
+:root {
+  --accent: #1a1a1a;
+  --muted: #555555;
+  --bg: #f2f2f2;
+  --paper: var(--bg);
+
+  --button-fg: #ffffff;
+  --button-bg: #c62828;
+  --button-bg-hover: #b3261e;
+  --button-border: #b3261e;
+  --button-border-hover: #8e1b16;
+  --shadow-key: rgba(0, 0, 0, 0.2);
+  --shadow-ambient: rgba(0, 0, 0, 0.12);
+
+  --fs-body: 12.5pt;
+  --fs-name: 21pt;
+  --fs-section: 12.5pt;
+  --fs-entry: 12.5pt;
+}
+
+@media (width > 560pt) {
+  :root {
+    --fs-body: 13.5pt;
+    --fs-name: 27pt;
+    --fs-section: 15pt;
+    --fs-entry: 14.5pt;
+  }
+}
+
+body {
+  background: var(--bg);
+  margin: 0;
+}
+
+.cv {
+  box-sizing: border-box;
+  max-width: 640pt;
+  margin: 10pt auto;
+  padding: 28pt 30pt;
+  background: var(--paper);
+  color: var(--accent);
+  font-family:
+    "Libertinus Serif", "Linux Libertine O", Georgia, "Times New Roman", serif;
+  font-size: var(--fs-body);
+  line-height: 1.55;
+}
+
+.cv a {
+  color: inherit;
+}
+
+.cv-header {
+  margin-bottom: 4pt;
+}
+
+.cv-name {
+  font-size: var(--fs-name);
+  font-weight: 700;
+  margin: 0 0 2pt;
+}
+
+.cv-contact {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+}
+
+.cv-contact li:not(:first-child)::before {
+  content: "•";
+  margin: 0 0.5em;
+}
+
+.cv-profile {
+  margin: 4pt 0 0;
+  text-align: justify;
+}
+
+.cv-section {
+  margin-top: 12pt;
+}
+
+.section-title {
+  font-size: var(--fs-section);
+  font-weight: 700;
+  letter-spacing: 0.5pt;
+  border-bottom: 0.6pt solid var(--accent);
+  margin: 0 0 8pt;
+  padding-bottom: 3pt;
+}
+
+.entry {
+  margin-bottom: 9pt;
+}
+
+.entry + .entry {
+  margin-top: 8pt;
+}
+
+.entry-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6em;
+  margin-bottom: 4pt;
+}
+
+.entry-title-line {
+  display: flex;
+  align-items: baseline;
+  gap: 4pt;
+
+  margin: 0;
+  font-size: var(--fs-entry);
+  font-weight: 700;
+  line-height: inherit;
+}
+
+.entry-title {
+  font-weight: 700;
+}
+
+.icon-link {
+  line-height: 1;
+}
+
+.icon-link img {
+  height: 0.85em;
+  width: auto;
+  vertical-align: -0.05em;
+}
+
+.entry-date {
+  color: var(--muted);
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.entry-body p {
+  margin: 0 0 3pt;
+  text-align: justify;
+}
+
+.entry-body ul {
+  list-style: disc;
+  margin: 0 0 2pt;
+  padding-left: 1.1em;
+}
+
+.entry-body ul li::marker {
+  color: var(--muted);
+}
+
+#pdf-download {
+  position: fixed;
+  top: 14pt;
+  right: 14pt;
+  display: inline-flex;
+  align-items: center;
+  gap: 6pt;
+  font-family: system-ui, sans-serif;
+  font-size: 11pt;
+  font-weight: 500;
+  color: var(--button-fg);
+  text-decoration: none;
+  border: 1px solid var(--button-border);
+  border-radius: 6px;
+  padding: 7pt 13pt;
+  background: var(--button-bg);
+}
+
+#pdf-download:hover {
+  background: var(--button-bg-hover);
+  border-color: var(--button-border-hover);
+}
+
+.download-icon {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+}
+
+#cv-error {
+  display: none;
+  font-family: system-ui, sans-serif;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 560pt) {
+  .cv {
+    margin: 0;
+    padding: 24pt 18pt;
+    max-width: none;
+  }
+
+  .entry-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1pt;
+  }
+
+  #pdf-download {
+    top: auto;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    right: 20px;
+    justify-content: center;
+    gap: 0;
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border: none;
+    border-radius: 16px;
+    box-shadow:
+      0 3px 5px var(--shadow-key),
+      0 1px 18px var(--shadow-ambient);
+  }
+
+  #pdf-download:active {
+    background: var(--button-bg-hover);
+  }
+
+  .download-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .download-label {
+    display: none;
+  }
+
+  .cv {
+    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+  }
+}

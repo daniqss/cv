@@ -9,11 +9,15 @@ It is available in english, galician and spanish.
 # defaults to english
 just compile
 just compile gl
-just compile es
+just compile es --features html --input format=html
 
 just clean
 ```
 
 ## deploy
-It gets deployed to GitHub Pages using a GitHub Actions workflow (`.github/workflows/deploy.yml`).
-`nix build .` builds the three pdfs. [This `index.html`](static/index.html) detects the browser language and loads the corresponding pdf.
+The generated pdf and html files are builded and deployed using [a github action](./.github/workflows/deploy.yml).
+To build it locally, use:
+
+```sh
+nix build .
+```
